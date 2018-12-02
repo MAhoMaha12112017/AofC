@@ -34,7 +34,7 @@ function findCommonLetters(string1, string2) {
     if (string1 !== string2) {
       return true;
     } else {
-      //  if one chars only, which are different --> false
+      //  if one chars only, which are equal --> false
       return false;
     }
   }
