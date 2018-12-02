@@ -1,6 +1,4 @@
 const fs = require('fs');
-let numbersObject = {};
-numbersObject[0] = 0;
 
 fs.readFile('./data.txt', "utf8", (err, data) => {
   if (err) throw err;
@@ -16,27 +14,32 @@ fs.readFile('./data.txt', "utf8", (err, data) => {
   let numbersObject = {};
   numbersObject[0] = 0;
 
-  const firstSameSum = findDuplicate(numbersArray, 0);
-  console.log(firstSameSum);
+  const firstSameSum = findDuplicate();
+  console.log(firstSameSum(numbersArray, 0));
 
 });
 
+// recursive function to find duplicate sum from array
 function findDuplicate(array, sum) {
+  let numbersObject = {0:0}; 
+  return function findD(array, sum) {
+    let counter = 0;
+    const length = array.length;
 
-  let counter = 0;
-  const length = array.length;
+    while (counter < length) {
+      sum = sum + array[counter];
 
-  while (counter < length) {
-    sum = sum + array[counter];
-
-    if (numbersObject[sum] ) {
-      return sum;
-    } else {
-      numbersObject[sum] = sum;
+      if (numbersObject[sum] ) {
+        return sum;
+      } else {
+        numbersObject[sum] = sum;
+      }
+      counter++;
     }
-    counter++;
-  }
 
-  return findDuplicate(array, sum);
+    return findD(array, sum);
+    }
 }
+
+
 
