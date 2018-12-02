@@ -11,9 +11,6 @@ fs.readFile('./data.txt', "utf8", (err, data) => {
   console.log(sum);
 
   // 2
-  let numbersObject = {};
-  numbersObject[0] = 0;
-
   const firstSameSum = findDuplicate();
   console.log(firstSameSum(numbersArray, 0));
 
