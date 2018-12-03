@@ -17,11 +17,13 @@ function commonClaims(array) {
 
   // loops elves and fills fabric data based to elves array
   fillFabricData(fabric, array);
-  
+    
   // loop fabric. count values <= 0
   const commonClaims = overLappingClaims(fabric, fabricLength);
+  // check elv with no overlapping
+  const elvData = checkFabricDataForNoOverLaps(fabric, array);
 
-  return commonClaims;
+  return [commonClaims, elvData];
 }
 
 function overLappingClaims(fabric, fabricLength) {
@@ -56,7 +58,30 @@ function getCoordinates(dataString) {
   let claimArea = data[1].split('x');
   let xEndCoord = Number(startCoordinates[0]) + Number(claimArea[0] - 1);
   let yEndCoord = Number(startCoordinates[1]) + Number(claimArea[1] - 1);
-  return [Number(startCoordinates[0]), Number(startCoordinates[1]), xEndCoord, yEndCoord];
+  return [Number(startCoordinates[0]), Number(startCoordinates[1]), xEndCoord, yEndCoord]; // returns xS, yS, xE, yE
+}
+
+function checkFabricDataForNoOverLaps(fabric, array) {
+  const arrayL = array.length;
+  // loop elves to find one with no overlapping (no coords < 1)
+  for(let i = 0; i < arrayL; i++) { // next elv
+    let allok = true;
+    const coordinates = getCoordinates(array[i]);
+    for(let x = coordinates[0]; x <= coordinates[2]; x++) { // x coords
+      for(let y = coordinates[1]; y <= coordinates[3]; y++) { // y coords
+        // check corresponding fabric value for overlapping
+        if (fabric[x][y] !== 1) {
+          // overlap, should be continued from next elv
+          allok = false;
+          break;
+        }
+      } 
+    }
+    // if here, all coords ok
+    if (allok === true) {
+      return array[i];
+    } 
+  }
 }
 
 
