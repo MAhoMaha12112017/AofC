@@ -1,33 +1,51 @@
+// THIS IS PRETTY AWFUL SPAGHETTI CODE OF NO VALUE.
+// Have no time to fix and no need to. Maybe later.
+// Spagettikoodia. Toimii. En ala toistaiseksi fiksaamaan.
+
 const fs = require('fs');
 
-// fs.readFile('./data4.txt', "utf8", (err, data) => {
-fs.readFile('./datacheck.txt', "utf8", (err, data) => {
-
+fs.readFile('./data4.txt', "utf8", (err, data) => {
   if (err) throw err;
   
   const inputArray = data.split('\r\n');
   inputArray.sort();
-  // console.log(inputArray);
   const editedArray = editArray(inputArray);
-  console.log('editedArray ' , editedArray);
-  // kirjoita(editedArray);
-  const sleepTimes = getSleepTimes(editedArray);
-  // console.log(sleepTimes);
+  const sleepTimesObject = getSleepTimes(editedArray); 
+  const sleepTimes = sleepTimesObject[0];
+  const sleepTimesForPartTwo = sleepTimesObject[1];
+  // console.log('sleepTimesForPartTwo:::', sleepTimesForPartTwo)
+
   // getGuard who sleeps the most
   const sleepyID = getSleepyGuardID(sleepTimes);
-  // console.log(sleepyID);
   // get Sleepiest Guard Data
   const sleepiestData = sleepiestGuardData(sleepyID, editedArray);
-  // console.log(sleepiestData);
   const sleepyMinute = getSleepiestMinute(sleepiestData);
-  console.log(sleepyMinute*sleepyID);
+  console.log('Part1: ', sleepyMinute*sleepyID);
 
+  const partTwoResult = findMaxMinute(sleepTimesForPartTwo);
+  console.log('Part2: ', partTwoResult);
 });
+
+const findMaxMinute = (sleepTimesForPartTwo) => {
+  let maxkey = 0;
+  let maxvalue = 0;
+  let minute = 0;
+  for (let key in sleepTimesForPartTwo) {
+    // haetaan taulukon suurin arvo kutakin id:ta kohti
+    for (let i = 0; i < 60; i++) {
+      if (sleepTimesForPartTwo[key][i] > maxvalue) {
+        maxvalue = sleepTimesForPartTwo[key][i];
+        maxkey = key;
+        minute = i;
+      }
+    }
+  }
+  return minute*maxkey;
+}
 
 const getSleepiestMinute = (sleepiestData) => {
   const minutes = Array(60).fill(0);
   for (let i = 0; i < sleepiestData.length; i++) {
-    // console.log(sleepiestData[i]);
     for (j = sleepiestData[i].falltime; j < sleepiestData[i].waketime; j++) {
       minutes[j]++;
     }
@@ -65,7 +83,7 @@ const sleepiestGuardData = (sleepyID, array) => {
       sleepMinutesObject.push({falltime, waketime});
     }
   }
-  console.log('sleepMinutesObject ', sleepMinutesObject);
+  // console.log('sleepMinutesObject ', sleepMinutesObject);
   return sleepMinutesObject;
 }
 
@@ -76,6 +94,7 @@ const editArray = (array) =>
 const getSleepTimes = (array) => {
   // array to collect sleep times
   const sleepTimeObject = {};
+  const sleepTimeObjectForPartTwo = {};
 
   const arrayLength = array.length;
   let id = null;
@@ -95,10 +114,12 @@ const getSleepTimes = (array) => {
     } else if (array[i][1].includes('wakes up')) {
       waketime = Number(array[i][0]);
       saveSleepTime(id, falltime, waketime, sleepTimeObject);
+      // for part 2 spaghetti
+      saveSleepTimeForPartTwo(id, falltime, waketime, sleepTimeObjectForPartTwo);
     }
   }
-  console.log('sleepTimeObject ', sleepTimeObject);
-  return sleepTimeObject;
+  // console.log('sleepTimeObject ', sleepTimeObject);
+  return [sleepTimeObject, sleepTimeObjectForPartTwo];
 }
 
 const saveSleepTime = (id, falltime, waketime, sleepTimeObject) => {
@@ -111,12 +132,29 @@ const saveSleepTime = (id, falltime, waketime, sleepTimeObject) => {
   }
 }
 
+const saveSleepTimeForPartTwo = (id, falltime, waketime, sleepTimeObjectForPartTwo) => {
+
+  if (sleepTimeObjectForPartTwo[id]) {
+    // // lisätään uudet arvot
+    for (let i = falltime; i < waketime; i++) {
+      sleepTimeObjectForPartTwo[id][i] += 1;
+    }
+    
+  } else {
+    // sijoitetaan uudet arvot
+    const minutes = Array(60).fill(0);
+    for (let i = falltime; i < waketime; i++) {
+      minutes[i] = 1;
+    }
+    sleepTimeObjectForPartTwo[id] = minutes;
+  }
+}
+
 // hakee
 const getSleepyGuardID = (sleepTimes) => {
   let sleepyID = null;
   let maxSleep = 0;
   for (let key in sleepTimes) {
-    // console.log(key, ' ', sleepTimes[key])
     if (sleepTimes[key].sleeptime > maxSleep) {
       maxSleep = sleepTimes[key].sleeptime;
       sleepyID = key;
@@ -124,11 +162,4 @@ const getSleepyGuardID = (sleepTimes) => {
   }
   console.log(sleepyID)
   return sleepyID;
-}
-
-function kirjoita(data) {
-  fs.writeFile('message3.txt', data, (err) => {
-    if (err) throw err;
-    console.log('The file has been saved!');
-  });
 }
