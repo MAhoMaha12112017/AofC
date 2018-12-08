@@ -1,4 +1,4 @@
-// solution based to: Andrei Negoie - Master The Coding Interview Course, Udemy
+// Spaghetti code.
 
 const fs = require('fs')
 
