@@ -4,9 +4,13 @@
   "description": "Advent of Code Day 1",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./day7.js"
   },
   "author": "Matti Aho",
   "license": "ISC",
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^1.18.7"
+  }
 }
