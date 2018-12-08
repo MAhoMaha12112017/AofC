@@ -1,4 +1,13 @@
-// Spaghetti code.
+// Spaghetti code. Part one ready and working.
+// Did not get part2 ready. Have to code again, everything.
+// Should be restructured
+// What I learned:
+// - brake code to smaller methods/functions
+// - try to maintain clear structure, make clear comments while coding
+// - if there is a change/misunderstanding --> check everything again with time and peace!!!
+// - do not rush, if not much time!!!
+// - take a break when need to
+
 
 const fs = require('fs')
 
