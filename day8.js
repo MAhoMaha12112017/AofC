@@ -1,3 +1,5 @@
+// Advent of Code - Day8 Part1
+
 const fs = require('fs');
 
 fs.readFile('./data8.txt', "utf8", (err, data) => {
