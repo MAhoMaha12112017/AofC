@@ -6,7 +6,7 @@ fs.readFile('./data3.txt', "utf8", (err, data) => {
   const inputArray = data.split('\r\n');
 
   const result = commonClaims(inputArray);
-  console.log(result);
+  console.log('Part1: ', result[0], '. Part2: ', result[1].slice(0,5));
   
 });
 
