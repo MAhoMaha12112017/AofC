@@ -1,3 +1,4 @@
+// Advent of code 2018 - Day9 - Part1
 
 class Game {
   constructor(numberOfMarbles, numberOfPlayers) {
