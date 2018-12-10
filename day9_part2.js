@@ -1,10 +1,11 @@
-// Advent of code 2018 - Day9 - Part1
+// Advent of code 2018 - Day9 - Part2 (also Part1 is in order here)
 
 class Game {
   constructor(numberOfMarbles, numberOfPlayers) {
     // marble 0 added here, other's in playMarbles
     const newMarble = new Marble(0);
     newMarble.next = newMarble;
+    newMarble.prev = newMarble;
     this.currentMarble = newMarble;
     this.playerTable = Array(numberOfPlayers + 1).fill(0); // no need to fill? first index not used
     this.numberOfPlayers = numberOfPlayers; 
@@ -16,6 +17,8 @@ class Game {
     // 1 and 2 marbles clockwise of the current marble
     const newMarble = new Marble(value);
     newMarble.next = this.currentMarble.next.next; // before 2 marbles from current
+    newMarble.prev = this.currentMarble.next;
+    this.currentMarble.next.next.prev = newMarble;
     this.currentMarble.next.next = newMarble; // after 1 marble from current
     this.currentMarble = newMarble;
     this.numberOfMarbles++;
@@ -30,11 +33,14 @@ class Game {
         // the marble 7 marbles counter-clockwise from the current marble is removed from the circle 
         // and added to the current player's score
         // marble located immediately clockwise of the marble that was removed becomes the new current marble
-        let beforeMarbleToDie = this.getMarble(this.numberOfMarbles - 8, this.currentMarble); 
-        let marbleToDie = beforeMarbleToDie.next;
+        let marbleToDie = this.currentMarble.prev.prev.prev.prev.prev.prev.prev; 
+        let beforeMarbleToDie = marbleToDie.prev;
+        let afterMarbleToDie = marbleToDie.next;
+        
         let points = marbleToDie.value + i;
-        beforeMarbleToDie.next = marbleToDie.next;
-        this.currentMarble = beforeMarbleToDie.next;
+        beforeMarbleToDie.next = afterMarbleToDie;
+        afterMarbleToDie.prev = beforeMarbleToDie;
+        this.currentMarble = afterMarbleToDie;
         // add points to player
         this.addPoints(points, (i-1)%this.numberOfPlayers + 1); 
         // marble not added but one removed
@@ -45,13 +51,6 @@ class Game {
       }
     }
   }
-  getMarble(steps, startingMarble) { 
-    let targetMarble = startingMarble;
-    for (let i = 0; i < steps; i++) {
-      targetMarble = targetMarble.next;
-    }
-    return targetMarble;
-  }
   addPoints(points, playernumber) {
     this.playerTable[playernumber] += points;
   }
@@ -61,10 +60,11 @@ class Marble {
   constructor(value) {
     this.value = value;
     this.next = null;
+    this.prev;
   }
 }
 
-const marbleGame = new Game(5807, 30); // 1st param: last marble is worth, 2nd param: players
+const marbleGame = new Game(7103500, 479); // 1st param: last marble is worth, 2nd param: players
 const table = marbleGame.playerTable;
 let max = 0;
 for (let i = 1; i < table.length; i++) {
