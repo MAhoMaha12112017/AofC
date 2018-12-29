@@ -16,6 +16,10 @@ data15T.txt
 data15T2.txt
 data16.txt
 data16_part2.txt
+data17.txt
+day17testdata.txt
+data19.txt
+data19test.txt
 day7_suttu.js
 day7_2.js
 day12_part2.js
@@ -25,6 +29,7 @@ day15.js
 day15_AUG.js
 day15_graafi.js
 day16_part2.js
+day17.js
 datacheck.txt
 message.txt
 message2.txt
