@@ -1,5 +1,4 @@
-// ADVENT OF CODE - DAY13. Part1. There is a bug somewhere, cannot find. Test data gives correct result, but not the 'production' data.
-// Have been working with this very long. Return later, possibly.
+// ADVENT OF CODE 2018 - DAY13. Part1. 
 
 const fs = require('fs');
 
@@ -7,7 +6,7 @@ fs.readFile('./data13.txt', "utf-8", (err, data) => {
   if (err) throw err;
 
   const roadArray = data.split('\r\n'); // console.log(roadArray); // console.log(data);
-  // console.log(roadArray);
+  console.log(roadArray);
 
   const tickCount = playGame(roadArray); // start simulation, array's rows will be rows in map - y-coords
   console.log(tickCount);
@@ -17,26 +16,23 @@ const playGame = (gameMap) => {
   // create map
   const map = new Map(gameMap);
   // add carts in method
-  map.getCartsFromMap();
-  console.log(map.carts);
+  map.getCartsFromMap(); 
+  // console.log(map.carts);
   map.sortCarts();
   map.drawMap(); 
   // tick at a time
-  for (let tick = 0; tick < 22; tick++) {
+  for (let tick = 0; tick < 222; tick++) {
     map.sortCarts();
     // console.log(tick, ' ennen movea ', map.carts)
     // move carts
     for (let i = 0; i < map.carts.length; i++) {
-      map.move(map.carts[i]);
+      let result = map.move(map.carts[i]);
+      // added 20.1
+      if (result) {
+        console.log('tikissä, result', result);
+        return result;
+      }
     }
-    // console.log(tick, ' moven jälkeen ', map.carts)
-    // let collision = false;
-    // for (let i = 0; i < map.carts.length; i++) {
-    //   collision = map.move(map.carts[i]);
-    //   if (collision) {
-    //     return collision;
-    //   }
-    // }
     // draw new map
     map.drawMap();
   }
@@ -85,11 +81,6 @@ class Map {
   }
   move(cart) { 
     const possibleDirection = this.getDirectionToGo(cart);
-    // check for collision first
-    // const collisionCheck = this.collision(possibleDirection, cart)
-    // if (collisionCheck !== false) {
-    //   return collisionCheck;
-    // }
     cart.editLocation(possibleDirection);
     // new check - check if carts with same coordinates
     const same = this.checkSameCoords();
@@ -130,7 +121,7 @@ class Map {
           cart.updateDirection('>')
           return  [1,0];
       }
-    } else if (locationData === '\\') {
+    } else if (locationData === '\\' || locationData === '\\\\') {  // edited 20.1
       switch (cart.direction) {
         case 'v':
           cart.updateDirection('>')
@@ -223,7 +214,7 @@ class Map {
     }
   }  
   getLocationData(x,y) { // returns map cells info
-    return this.map[y][x];
+    return this.map[y].charAt(x); 
   }
   drawMap() { // draw map with carts
     this.addCartsToMapData();
@@ -291,4 +282,3 @@ class Cart {
     this.direction = direction;
   }
 }
-
